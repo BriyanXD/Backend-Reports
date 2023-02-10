@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  reportsback:
+    image: node
+    container_name: reports_back
+    ports:
+      - 3001:3001
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - reportsdb
+    networks:
+      - reportsnetwork
+    restart: always
+    command: npm start
+
+  reportsdb:
+    image: postgres
+    container_name: reports_db
+    ports:
+      - 5432:5432
+    build:
+      context: .
+      dockerfile: postgres.Dockerfile
+    environment:
+      - POSTGRES_PASSWORD=123456789
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=reports
+    networks:
+      - reportsnetwork
+    volumes:
+      - reportsdb-volume:/var/lib/postgresql/data
+
+networks:
+  reportsnetwork:
+    name: reports_network
+    driver: bridge
+    ipam:
+      driver: default
+
+volumes:
+  reportsdb-volume:
+    name: reports_db_volume
