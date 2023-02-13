@@ -3,16 +3,18 @@ services:
   reportsback:
     image: node
     container_name: reports_back
-    restart: always
     ports:
       - 3001:3001
     build:
       context: .
-      dockerfile: Dockerfile
-    links:
+      dockerfile: Dockerfile.dev
+    depends_on:
       - reportsdb
     networks:
       - reportsnetwork
+    volumes:
+      - .:/app
+    command: npm run dev
 
   reportsdb:
     image: postgres

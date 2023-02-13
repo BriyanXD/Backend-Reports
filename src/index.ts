@@ -28,7 +28,7 @@ Inventory.belongsTo(Product, {as: "prod", foreignKey:"productId"});
 
 //* Escucha del servidor y la BD
 app.listen(PORT_APP, () => {
-  console.log(`🚀 Server listening on port ${PORT_APP}`);
+  console.log(`🚀 Server listening on port comentado ${PORT_APP}`);
   console.log(`➡️ http://${HOST_APP}:${PORT_APP}`);
   sequelize
     .sync({ force: false })
