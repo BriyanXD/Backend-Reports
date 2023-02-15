@@ -7,7 +7,7 @@
     "pm2": "pm2 start build/index.js",
     "build": "tsc",
     "start": "node build/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "Briyan Angel Bohtelo",
