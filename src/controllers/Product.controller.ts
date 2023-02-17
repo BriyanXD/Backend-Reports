@@ -30,10 +30,11 @@ const PostNewProduct = async (req:Request, res:Response) => {
 //*Actualizar cantidad del producto
 const UpdateQuantity = async (req:Request, res:Response) => {
   const { productId } = req.query;
-  const {name, price, quantity, condition, category, unit } = req.body
+  const {name, price, quantity, category, unit } = req.body
   try {
     if (!productId) throw new Error("Faltan datos: productId o product");
-    await Product.update({name, price, quantity, condition, category, unit },{where:{id:Number(productId)}})
+    const conditionVerified = verifyCondition("", quantity)
+    await Product.update({name, price, quantity, condition:conditionVerified, category, unit },{where:{id:Number(productId)}})
     const product = await Product.findByPk(Number(productId))
     res.send(product)
   } catch (error) {
@@ -85,15 +86,20 @@ const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, typ
     const product:Product = await Product.findByPk(productId) as Product;
     let quantityProduct = product?.getDataValue("quantity");
     let cantidad = 0;
+    
     if(!quantityProduct)throw new Error("the property: quantity of product is not found")
     if(type === "substract")cantidad = Number(quantityProduct) - Number(newQuantity)
     else cantidad = Number(quantityProduct) + Number(newQuantity)
-
+    
+    let conditionVerified = verifyCondition("",cantidad)
+    
+    if(cantidad){
       const updatedProduct = await Product.update(
-        { quantity: cantidad },
+        { quantity: cantidad, condition: conditionVerified },
         { where: { id: productId } }
         );
       return updatedProduct;
+    }
     } catch (error) {
       return handleError("FUNCTION_GET_PRODUCT",error)
   }
