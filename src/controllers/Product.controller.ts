@@ -2,6 +2,7 @@ import Product from "../models/Product";
 import { Request, Response } from "express";
 import {handleError, handleErrorHttp} from "../utils/error";
 import { Operation } from "../../types";
+import sequelize from "sequelize";
 
 //* Peticiones
 //* Obetener todos los Productos o un solo producto por su Id
@@ -78,6 +79,19 @@ const GetAllProductsOrProductByName = async (productId?: number) => {
   }
 };
 
+const getAllProductsByName = async(name:string) => {
+  try {
+    const where = name ? sequelize.where(
+      sequelize.fn('lower', sequelize.col('name')),
+      sequelize.fn('lower', name)
+    ) : {}
+    const productsByName = await Product.findOne({where})
+    return productsByName;
+  } catch (error) {
+    return handleError("FUNCTION_GET_PRODUCT",error)
+  }
+}
+
 //*Actualizar la cantidad del producto dependiento del tipo de entrada
  
 
@@ -110,5 +124,6 @@ export {
   UpdateQuantity,
   UpdateQuantityOfProduct,
   GetAllProductsOrProductByName,
-  DeleteProduct
+  DeleteProduct,
+  getAllProductsByName
 };

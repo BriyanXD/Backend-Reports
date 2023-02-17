@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import Sales from "../models/Sale";
 import Product from "../models/Product";
 import {
+  getAllProductsByName,
   UpdateQuantityOfProduct,
 } from "./Product.controller";
 import { handleError, handleErrorHttp } from "../utils/error";
+import { TProduct } from "../../types";
 
 //* Crea el registro de una nueva venta
 const PostNewSale = async (req:Request, res:Response)=> {
@@ -30,11 +32,15 @@ const PostNewSale = async (req:Request, res:Response)=> {
 
 //* Busca todas las ventas
 const GetSales = async (req:Request, res:Response) => {
-  const { createdAt } = req.query;
+  const { createdAt, name } = req.query;
   try {
-      const allSales = await GetSalesByDate(createdAt ? String(createdAt) : null)
+      if(name){
+        const allSales = await GetSalesByName(name ? String(name) : "")
+        return res.json(allSales)
+      }
+      const allSales = await GetSalesByDate(createdAt? String(createdAt): "" )
       return res.json(allSales)
-  } catch (error) {
+    } catch (error) {
     return handleErrorHttp(res, 400, "GET_SALE", error)
   }
 };
@@ -56,5 +62,22 @@ const GetSalesByDate = async (createdAt?:string | null) => {
     return handleError("GET_SALE_BY_DATE",error)
   }
 };
-
-export { PostNewSale, GetSales };
+//* Busca todas las ventas por fecha
+const GetSalesByName = async (name?:string | null) => {
+  try {
+      const product = await getAllProductsByName(String(name)) as TProduct
+      const where = product ? { productId:product?.id } : {}
+        const allSalesByName = await Sales.findAll({
+          where,
+          include: {
+            model: Product,
+            as: "product",
+            attributes: ["name", "price", "category"],
+          },
+        });
+        return allSalesByName;
+  } catch (error) {
+    return handleError("GET_SALE_BY_NAME",error)
+  }
+};
+export { PostNewSale, GetSales,GetSalesByName };
