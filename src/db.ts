@@ -4,3 +4,4 @@ const sequelize = new Sequelize(
   `postgres://${USER_DB}:${PASS_DB}@${HOST_DB}:${PORT_DB}/${NAME_DB}`
 );
 export default sequelize;
+//test
