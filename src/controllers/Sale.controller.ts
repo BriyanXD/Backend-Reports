@@ -62,6 +62,22 @@ const GetSalesByDate = async (createdAt?:string | null) => {
     return handleError("GET_SALE_BY_DATE",error)
   }
 };
+
+const UpdateSale = async (req:Request, res:Response) => {
+  const { id } = req.params;
+  const { quantity, total } = req.body;
+  try {
+    if(!id) return
+    console.log(id ,"esto");
+    const saleToUpdate = await Sales.update({quantity,total}
+      ,{ where: {productId: id} })
+    console.log(saleToUpdate);
+    res.json(saleToUpdate)
+  } catch (error) {
+    handleErrorHttp(res,500,"UPDATE_SALE",error);
+  }
+}
+
 //* Busca todas las ventas por fecha
 const GetSalesByName = async (name?:string | null) => {
   try {
@@ -80,4 +96,4 @@ const GetSalesByName = async (name?:string | null) => {
     return handleError("GET_SALE_BY_NAME",error)
   }
 };
-export { PostNewSale, GetSales,GetSalesByName };
+export { PostNewSale, GetSales, GetSalesByName, UpdateSale };

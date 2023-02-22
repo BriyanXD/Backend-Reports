@@ -23,6 +23,9 @@ entryDate: {
 exitDate: {
   type: DataTypes.DATEONLY,
 },
+destiny: {
+  type: DataTypes.STRING,
+},
 storage: {
   type: DataTypes.STRING,
   allowNull: false,

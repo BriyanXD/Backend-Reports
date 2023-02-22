@@ -15,6 +15,7 @@ export  interface TInventory {
     quantity: number;
     entryDate:string;
     exitDate:string;
+    destiny:string;
     storage:string;
     description:string;
 }
@@ -24,6 +25,7 @@ export interface TSale{
     total:number;
     createdAt:string;
     creationTime:string;
+    productId?:number;
 }
 
 export type Operation = "substract" | "add" ;
