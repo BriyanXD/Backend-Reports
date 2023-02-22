@@ -28,3 +28,4 @@ export interface TSale{
 
 export type Operation = "substract" | "add" ;
 //export type TSaleNotPrId = Optional<TSale, "productId">
+//test
