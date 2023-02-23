@@ -65,14 +65,21 @@ const GetSalesByDate = async (createdAt?:string | null) => {
 
 const UpdateSale = async (req:Request, res:Response) => {
   const { id } = req.params;
-  const { quantity, total } = req.body;
+  const { quantity, total, product, productId } = req.body;
   try {
-    if(!id) return
-    console.log(id ,"esto");
-    const saleToUpdate = await Sales.update({quantity,total}
-      ,{ where: {productId: id} })
-    console.log(saleToUpdate);
-    res.json(saleToUpdate)
+    let currentTotal = 0;
+    if(total) currentTotal = total
+    else currentTotal = quantity * product.price;
+
+    const calculated = await calculateQuantity(Number(id), quantity);
+
+    await Sales.update({quantity,total:currentTotal}
+      ,{ where: { id } })
+
+    await UpdateQuantityOfProduct(productId, calculated.result, calculated.type);
+
+    const saleUpdated = await Sales.findOne({where:{id}})
+    res.json(saleUpdated)
   } catch (error) {
     handleErrorHttp(res,500,"UPDATE_SALE",error);
   }
@@ -96,4 +103,19 @@ const GetSalesByName = async (name?:string | null) => {
     return handleError("GET_SALE_BY_NAME",error)
   }
 };
-export { PostNewSale, GetSales, GetSalesByName, UpdateSale };
+
+const calculateQuantity = async (id:number, currentQuantity:number) => {
+  try {
+    const sale = await Sales.findByPk(id);
+    if(!sale) return
+    let previusQuantity = sale?.getDataValue("quantity");
+    if(currentQuantity > previusQuantity) return {result:currentQuantity - previusQuantity, type:"substract"}
+    if(currentQuantity < previusQuantity) return {result:previusQuantity - currentQuantity, type:"add"}
+    return {result:currentQuantity, type: "otro"}
+  } catch (error) {
+    return handleError("CALCULATE_QUANTITY",error);
+  }
+}
+
+
+export { PostNewSale, GetSales, GetSalesByName, UpdateSale, calculateQuantity };

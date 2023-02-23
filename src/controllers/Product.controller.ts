@@ -97,6 +97,9 @@ const getAllProductsByName = async(name:string) => {
 
 const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, type?:Operation) => {
   try {
+
+    if(type !== "add" && type !== "substract") return
+
     const product:Product = await Product.findByPk(productId) as Product;
     let quantityProduct = product?.getDataValue("quantity");
     let cantidad = 0;
