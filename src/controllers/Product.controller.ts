@@ -107,12 +107,12 @@ const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, typ
     if(!quantityProduct)throw new Error("the property: quantity of product is not found")
     if(type === "substract")cantidad = Number(quantityProduct) - Number(newQuantity)
     else cantidad = Number(quantityProduct) + Number(newQuantity)
-    
+        
     let conditionVerified = verifyCondition("",cantidad)
     
-    if(cantidad){
+    if(cantidad || cantidad === 0){
       const updatedProduct = await Product.update(
-        { quantity: cantidad, condition: conditionVerified },
+        { quantity: cantidad || 0, condition: conditionVerified },
         { where: { id: productId } }
         );
       return updatedProduct;

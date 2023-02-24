@@ -35,7 +35,7 @@ const GetSales = async (req:Request, res:Response) => {
   const { createdAt, name } = req.query;
   try {
       if(name){
-        const allSales = await GetSalesByName(name ? String(name) : "")
+        const allSales = await GetSalesByNameProduct(name ? String(name) : "")
         return res.json(allSales)
       }
       const allSales = await GetSalesByDate(createdAt? String(createdAt): "" )
@@ -54,7 +54,7 @@ const GetSalesByDate = async (createdAt?:string | null) => {
           include: {
             model: Product,
             as: "product",
-            attributes: ["name", "price", "category"],
+            attributes: ["name", "price", "category","quantity"],
           },
         });
         return allSalesByDate;
@@ -72,13 +72,15 @@ const UpdateSale = async (req:Request, res:Response) => {
     else currentTotal = quantity * product.price;
 
     const calculated = await calculateQuantity(Number(id), quantity);
+    
+    if(calculated.result > product.quantity) throw new Error('La cantidad excede el stock disponible');
 
     await Sales.update({quantity,total:currentTotal}
       ,{ where: { id } })
 
     await UpdateQuantityOfProduct(productId, calculated.result, calculated.type);
 
-    const saleUpdated = await Sales.findOne({where:{id}})
+    const saleUpdated = await Sales.findOne({where:{id}, include:{ model: Product, as: "product", attributes: ["name", "price", "category","quantity"],}})
     res.json(saleUpdated)
   } catch (error) {
     handleErrorHttp(res,500,"UPDATE_SALE",error);
@@ -86,7 +88,7 @@ const UpdateSale = async (req:Request, res:Response) => {
 }
 
 //* Busca todas las ventas por fecha
-const GetSalesByName = async (name?:string | null) => {
+const GetSalesByNameProduct = async (name?:string | null) => {
   try {
       const product = await getAllProductsByName(String(name)) as TProduct
       const where = product ? { productId:product?.id } : {}
@@ -95,7 +97,7 @@ const GetSalesByName = async (name?:string | null) => {
           include: {
             model: Product,
             as: "product",
-            attributes: ["name", "price", "category"],
+            attributes: ["name", "price", "category","quantity"],
           },
         });
         return allSalesByName;
@@ -103,6 +105,7 @@ const GetSalesByName = async (name?:string | null) => {
     return handleError("GET_SALE_BY_NAME",error)
   }
 };
+
 
 const calculateQuantity = async (id:number, currentQuantity:number) => {
   try {
@@ -118,4 +121,4 @@ const calculateQuantity = async (id:number, currentQuantity:number) => {
 }
 
 
-export { PostNewSale, GetSales, GetSalesByName, UpdateSale, calculateQuantity };
+export { PostNewSale, GetSales, GetSalesByNameProduct, UpdateSale, calculateQuantity };
