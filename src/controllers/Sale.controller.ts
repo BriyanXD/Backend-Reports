@@ -11,7 +11,7 @@ import { TProduct } from "../../types";
 //* Crea el registro de una nueva venta
 const PostNewSale = async (req:Request, res:Response)=> {
   try {
-    const { quantity, productId } = req.body;
+    const { quantity, productId } = req.body; 
 
     const currentDate = new Date();
     const currentTime = currentDate.getHours() + ":" + currentDate.getMinutes();
@@ -72,7 +72,7 @@ const UpdateSale = async (req:Request, res:Response) => {
     else currentTotal = quantity * product.price;
 
     const calculated = await calculateQuantity(Number(id), quantity);
-    
+
     if(calculated.result > product.quantity) throw new Error('La cantidad excede el stock disponible');
 
     await Sales.update({quantity,total:currentTotal}
