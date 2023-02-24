@@ -7,8 +7,8 @@ class Product extends Model<TProduct> {}
 
 Product.init({
   id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
     allowNull: false,
   },
@@ -42,42 +42,3 @@ Product.init({
 })
 
 export default Product;
-
-
-/* const Product: ModelDefined<TProduct,TProductCreation> = sequelize.define(
-  "product",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-      allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    condition: {
-      type: DataTypes.STRING,
-    },
-    category: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    unit: {
-      type: DataTypes.STRING,
-    },
-  },
-  {
-    timestamps: false,
-  }
-); */

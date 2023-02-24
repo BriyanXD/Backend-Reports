@@ -10,7 +10,8 @@ import {
 import {
   PostNewSale,
   GetSales,
-  UpdateSale
+  UpdateSale,
+  deleteSale
 } from "../controllers/Sale.controller";
 
 import {
@@ -30,6 +31,7 @@ routes.delete("/product/:id",DeleteProduct)
 routes.post("/sale", PostNewSale);
 routes.get("/sale", GetSales);
 routes.put("/sale/:id", UpdateSale)
+routes.delete("/sale/:id", deleteSale)
 //* Rutas Inventario
 routes.get("/inventory", GetAllHistorialTheInventory);
 routes.post("/inventory", PostNewRegisterInTheInventory);

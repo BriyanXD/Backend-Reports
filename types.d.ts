@@ -1,5 +1,5 @@
 export interface TProduct{
-    id?: number;
+    id?: string;
     name: string;
     quantity:number;
     price:number;
@@ -11,7 +11,7 @@ export interface TProduct{
 export type NewProduct = Omit<TProduct, 'id'>
 
 export  interface TInventory {
-    id:number;
+    id:string;
     quantity: number;
     entryDate:string;
     exitDate:string;

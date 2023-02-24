@@ -63,6 +63,18 @@ const GetSalesByDate = async (createdAt?:string | null) => {
   }
 };
 
+const deleteSale = async (req:Request, res:Response)=> {
+  try {
+    const { id } = req.params;
+    const {productId, quantity} = req.body
+    const saleDeleted = await Sales.destroy({where:{id}})
+    await UpdateQuantityOfProduct(productId, quantity, "add");
+    res.json(saleDeleted)
+  } catch (error) {
+    handleErrorHttp(res, 500, "DELETE_SALE", error)
+  }
+}
+
 const UpdateSale = async (req:Request, res:Response) => {
   const { id } = req.params;
   const { quantity, total, product, productId } = req.body;
@@ -121,4 +133,4 @@ const calculateQuantity = async (id:number, currentQuantity:number) => {
 }
 
 
-export { PostNewSale, GetSales, GetSalesByNameProduct, UpdateSale, calculateQuantity };
+export { PostNewSale, GetSales, GetSalesByNameProduct, UpdateSale, calculateQuantity, deleteSale };
