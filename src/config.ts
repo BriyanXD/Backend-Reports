@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 const PORT_APP = process.env.PORT_APP || "3001";
-const HOST_APP = process.env.HOST_APP || "192.167.0.9";
+const HOST_APP = process.env.HOST_APP || "192.167.0.4";
 const USER_DB = process.env.USER_DB || "postgres";
 const PASS_DB = process.env.PASS_DB || "123456789";
 const HOST_DB = process.env.HOST_DB || "localhost";

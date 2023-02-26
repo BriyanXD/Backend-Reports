@@ -9,7 +9,7 @@ import sequelize from "sequelize";
 const GetAllProducts = async (req:Request, res:Response) => {
   const { productId } = req.query;
   try {
-    const products:Product = await GetAllProductsOrProductByName(Number(productId))as Product;
+    const products:Product = await GetAllProductsOrProductByName(String(productId))as Product;
     return res.json(products);
   } catch (error) {
     return handleErrorHttp(res, 400, 'ERROR_GET_ALL_PRODUCTS', error)
@@ -29,14 +29,15 @@ const PostNewProduct = async (req:Request, res:Response) => {
 };
 
 //*Actualizar cantidad del producto
-const UpdateQuantity = async (req:Request, res:Response) => {
+  const UpdateQuantity = async (req:Request, res:Response) => {
   const { productId } = req.query;
-  const {name, price, quantity, category, unit } = req.body
+  const {name, price, quantity, category, unit } = req.body;
+
   try {
     if (!productId) throw new Error("Faltan datos: productId o product");
     const conditionVerified = verifyCondition("", quantity)
-    await Product.update({name, price, quantity, condition:conditionVerified, category, unit },{where:{id:Number(productId)}})
-    const product = await Product.findByPk(Number(productId))
+    await Product.update({name, price, quantity, condition:conditionVerified, category, unit },{where:{id:String(productId)}})
+    const product = await Product.findByPk(String(productId))
     res.send(product)
   } catch (error) {
     return handleErrorHttp(res, 400, 'ERROR_UPDATE_PRODUCTS',error)
@@ -48,7 +49,6 @@ const DeleteProduct = async(req:Request, res:Response)=> {
   try {
       const {id} = req.params;
       const productDeleted = await Product.destroy({where:{id}});
-      console.log(productDeleted)
       res.json(productDeleted);
   } catch (error) {
     return handleErrorHttp(res, 400, 'ERROR_DELETE_PRODUCT', error);
@@ -65,9 +65,9 @@ const verifyCondition = (condition:string, quantity:number):string => {
 }
 
 //*Funcion que obtiene todos los productos
-const GetAllProductsOrProductByName = async (productId?: number) => {
+const GetAllProductsOrProductByName = async (productId?: string) => {
   try {
-    if (!productId) {
+    if (!productId || productId == 'undefined') {
       const products: Product[] = await Product.findAll() as Product[];
       return products;
     } else {
@@ -75,7 +75,7 @@ const GetAllProductsOrProductByName = async (productId?: number) => {
       return product;
     }
   } catch (error) {
-    return handleError("FUNCTION_GET_PRODUCT",error)
+    return handleError("FUNCTION_GET_PRODUCT_BY_NAME",error)
   }
 };
 
