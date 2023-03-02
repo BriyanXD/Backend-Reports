@@ -10,7 +10,7 @@ import {handleErrorHttp,handleError} from "../utils/error";
 const GetAllHistorialTheInventory = async (req:Request, res:Response) => {
   try {
     const {registerId} = req.query;
-    const inventory = await FunctionGetInventory(registerId ? Number(registerId) : null);
+    const inventory = await FunctionGetInventory(String(registerId) || null);
     res.json(inventory);
   } catch (error) {
     handleErrorHttp(res, 400, "GET_INVENTORY", error)
@@ -19,12 +19,14 @@ const GetAllHistorialTheInventory = async (req:Request, res:Response) => {
 
 //*Crear nuevo registro en Inventario
 const PostNewRegisterInTheInventory = async (req:Request, res:Response) => {
-  const { productId, quantity, exitDate, entryDate } = req.body;
+  const { exitDate, entryDate, productId, quantity } = req.body;
   try {
-    if(!entryDate && !exitDate) throw new Error("Missing data: exitDate or EntryDate")
+    if(entryDate === "" && exitDate === "") throw new Error("Missing data: exitDate or EntryDate")
     if(entryDate && exitDate) throw new Error("Select alone one data type: exitDate or EntryDate")
     let type:Operation = exitDate ? "substract" : "add"
-    const newRegister = await Inventory.create(req.body);
+
+    const element = await Inventory.create({...req.body, exitDate: exitDate || null , entryDate: entryDate || null});
+    const newRegister = await FunctionGetInventory(String(element?.getDataValue("id")))
     await UpdateQuantityOfProduct(productId, quantity, type);
     res.json(newRegister);
   } catch (error) {
@@ -50,9 +52,9 @@ const UpdateDateOfRegisterForType = async (req:Request, res:Response) => {
 
 //* Funciones
 //* Funcion para obtener los registros del invetario
-const FunctionGetInventory = async (registerId:number | null) => {
+const FunctionGetInventory = async (registerId?:string | null) => {
   try {
-    if (!registerId) {
+    if (registerId === "undefined") {
       const inventory = await Inventory.findAll({
         include: {
           model: Product,
@@ -62,7 +64,7 @@ const FunctionGetInventory = async (registerId:number | null) => {
       });
       return inventory;
     } else {
-      const inventory = await Inventory.findByPk(registerId, {
+      const inventory = await Inventory.findByPk(String(registerId), {
         include: {
           model: Product,
           as: "prod",
