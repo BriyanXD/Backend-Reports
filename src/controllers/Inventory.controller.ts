@@ -35,6 +35,17 @@ const PostNewRegisterInTheInventory = async (req:Request, res:Response) => {
 };
 
 //*Actualizar la fecha de entrada o salida del invetario
+
+const UpdateIventory = async(req:Request, res:Response) => {
+  try {
+    const inventory = await Inventory.update(req.body,{where:{id:req.body.id}})
+    console.log("IVENTORY",inventory);
+    res.json(inventory)
+  } catch (error) {
+    handleErrorHttp(res, 400, "UPDATE_INVENTORY", error)
+  }
+}
+
 const UpdateDateOfRegisterForType = async (req:Request, res:Response) => {
   const { registerId, newDate, type } = req.body;
   try {
@@ -95,4 +106,5 @@ export {
   GetAllHistorialTheInventory,
   PostNewRegisterInTheInventory,
   UpdateDateOfRegisterForType,
+  UpdateIventory
 };
