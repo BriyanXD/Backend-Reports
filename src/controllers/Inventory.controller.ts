@@ -38,8 +38,8 @@ const PostNewRegisterInTheInventory = async (req:Request, res:Response) => {
 
 const UpdateIventory = async(req:Request, res:Response) => {
   try {
-    const inventory = await Inventory.update(req.body,{where:{id:req.body.id}})
-    console.log("IVENTORY",inventory);
+    await Inventory.update(req.body,{where:{id:req.body.id}})
+    const inventory = await FunctionGetInventory(req.body.id);
     res.json(inventory)
   } catch (error) {
     handleErrorHttp(res, 400, "UPDATE_INVENTORY", error)
