@@ -18,6 +18,7 @@ import {
   GetAllHistorialTheInventory,
   PostNewRegisterInTheInventory,
   UpdateIventory,
+  DelelteInventory
 } from "../controllers/Inventory.controller";
 
 const routes = Router();
@@ -37,4 +38,5 @@ routes.delete("/sale/:id", deleteSale)
 routes.get("/inventory", GetAllHistorialTheInventory);
 routes.post("/inventory", PostNewRegisterInTheInventory);
 routes.put("/inventory",UpdateIventory)
+routes.delete("/inventory/:id",DelelteInventory)
 export default routes;

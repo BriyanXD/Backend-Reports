@@ -61,6 +61,17 @@ const UpdateDateOfRegisterForType = async (req:Request, res:Response) => {
   }
 };
 
+const DelelteInventory = async(req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log(id, "<<<<<< ID");
+    const inventory = await Inventory.destroy({where:{id}})
+    res.json(inventory);
+  } catch (error) {
+    handleErrorHttp(res, 400, "DELETE_INVENTORY", error)
+  }
+} 
+
 //* Funciones
 //* Funcion para obtener los registros del invetario
 const FunctionGetInventory = async (registerId?:string | null) => {
@@ -106,5 +117,6 @@ export {
   GetAllHistorialTheInventory,
   PostNewRegisterInTheInventory,
   UpdateDateOfRegisterForType,
-  UpdateIventory
+  UpdateIventory,
+  DelelteInventory
 };
