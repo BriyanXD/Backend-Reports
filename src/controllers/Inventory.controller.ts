@@ -38,11 +38,11 @@ const PostNewRegisterInTheInventory = async (req:Request, res:Response) => {
 
 const UpdateIventory = async(req:Request, res:Response) => {
   try {
-    const { exitDate, productId, quantity } = req.body;
-    let type:Operation = exitDate ? "substract" : "add";
+    const { productId, quantity, id, exitDate } = req.body;
+    const calculated = exitDate ? await calculateQuantityExit(id, quantity) : await calculateQuantityEntry(id, quantity)
     await Inventory.update(req.body,{where:{id:req.body.id}});
     const inventory = await FunctionGetInventory(req.body.id);
-    await UpdateQuantityOfProduct(productId, quantity, type);
+    await UpdateQuantityOfProduct(productId, calculated.result, calculated.type);
     res.json(inventory)
   } catch (error) {
     handleErrorHttp(res, 400, "UPDATE_INVENTORY", error)
@@ -67,7 +67,11 @@ const UpdateDateOfRegisterForType = async (req:Request, res:Response) => {
 const DelelteInventory = async(req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const product = await Inventory.findByPk(id);
+    //! Esta condicion esta invertida al tener que usarse al momento de eliminar un registro
+    let type:Operation = product?.getDataValue("exitDate") ? "add" : "substract";
     const inventory = await Inventory.destroy({where:{id}})
+    await UpdateQuantityOfProduct(String(product?.getDataValue("productId")), Number(product?.getDataValue("quantity")), type);
     res.json(inventory);
   } catch (error) {
     handleErrorHttp(res, 400, "DELETE_INVENTORY", error)
@@ -115,6 +119,30 @@ const FunctionUpdateDateofRegister = async (registerId:number, newDate:string, t
   }
 };
 
+const calculateQuantityEntry = async (id:string, currentQuantity:number) => {
+  try {
+    const sale = await Inventory.findByPk(id);
+    if(!sale) return
+    let previusQuantity = sale?.getDataValue("quantity");
+    if(currentQuantity > previusQuantity) return {result:currentQuantity - previusQuantity, type:"add"}
+    if(currentQuantity < previusQuantity) return {result:previusQuantity - currentQuantity, type:"substract"}
+    return {result:currentQuantity, type: "otro"}
+  } catch (error) {
+    return handleError("CALCULATE_QUANTITY",error);
+  }
+}
+const calculateQuantityExit = async (id:string, currentQuantity:number) => {
+  try {
+    const sale = await Inventory.findByPk(id);
+    if(!sale) return
+    let previusQuantity = sale?.getDataValue("quantity");
+    if(currentQuantity > previusQuantity) return {result:currentQuantity - previusQuantity, type:"substract"}
+    if(currentQuantity < previusQuantity) return {result:previusQuantity - currentQuantity, type:"add"}
+    return {result:currentQuantity, type: "otro"}
+  } catch (error) {
+    return handleError("CALCULATE_QUANTITY",error);
+  }
+}
 export {
   GetAllHistorialTheInventory,
   PostNewRegisterInTheInventory,

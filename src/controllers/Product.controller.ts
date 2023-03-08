@@ -95,13 +95,9 @@ const getAllProductsByName = async(name:string) => {
 //*Actualizar la cantidad del producto dependiento del tipo de entrada
  
 
-const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, type?:Operation) => {
+const UpdateQuantityOfProduct = async (productId:string, newQuantity:number, type?:Operation) => {
   try {
-    console.log(newQuantity,"CANDTIDAD <<<<<<<");
-    console.log(productId,"ID <<<<<<<");
-
     if(type !== "add" && type !== "substract") return
-
     const product:Product = await Product.findByPk(productId) as Product;
     let quantityProduct = product?.getDataValue("quantity");
     let cantidad = 0;

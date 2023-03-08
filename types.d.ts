@@ -18,6 +18,7 @@ export  interface TInventory {
     destiny:string;
     storage:string;
     description:string;
+    productId?:string
 }
 export interface TSale{
     id:number;
