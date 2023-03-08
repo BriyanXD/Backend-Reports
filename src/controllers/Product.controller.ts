@@ -97,6 +97,8 @@ const getAllProductsByName = async(name:string) => {
 
 const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, type?:Operation) => {
   try {
+    console.log(newQuantity,"CANDTIDAD <<<<<<<");
+    console.log(productId,"ID <<<<<<<");
 
     if(type !== "add" && type !== "substract") return
 
@@ -118,7 +120,7 @@ const UpdateQuantityOfProduct = async (productId:number, newQuantity:number, typ
       return updatedProduct;
     }
     } catch (error) {
-      return handleError("FUNCTION_GET_PRODUCT",error)
+      return handleError("FUNCTION_UPDATE_QUANTITY_PRODUCT",error)
   }
 };
 export {

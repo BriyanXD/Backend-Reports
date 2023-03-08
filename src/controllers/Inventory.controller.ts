@@ -38,8 +38,11 @@ const PostNewRegisterInTheInventory = async (req:Request, res:Response) => {
 
 const UpdateIventory = async(req:Request, res:Response) => {
   try {
-    await Inventory.update(req.body,{where:{id:req.body.id}})
+    const { exitDate, productId, quantity } = req.body;
+    let type:Operation = exitDate ? "substract" : "add";
+    await Inventory.update(req.body,{where:{id:req.body.id}});
     const inventory = await FunctionGetInventory(req.body.id);
+    await UpdateQuantityOfProduct(productId, quantity, type);
     res.json(inventory)
   } catch (error) {
     handleErrorHttp(res, 400, "UPDATE_INVENTORY", error)
@@ -64,7 +67,6 @@ const UpdateDateOfRegisterForType = async (req:Request, res:Response) => {
 const DelelteInventory = async(req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    console.log(id, "<<<<<< ID");
     const inventory = await Inventory.destroy({where:{id}})
     res.json(inventory);
   } catch (error) {
