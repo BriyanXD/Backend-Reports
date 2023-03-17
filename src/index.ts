@@ -3,21 +3,30 @@ import sequelize from "./db";
 import routes from "./routes/index.routes";
 import Product from "./models/Product";
 import Sales from "./models/Sale";
+import cookieParser from "cookie-parser";
 import Inventory from "./models/Inventory";
-import cors from "cors";
 import morgan from "morgan";
 import { HOST_APP, PORT_APP, ROUTE } from "./config";
 const app = express();
 
 
 //* Puerto y midlewares
-app.use(express.json());
-app.use(cors({
-  "origin": "*",
-  "methods": "GET,PUT,POST,DELETE",
-}))
-app.use(routes);
+
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(cookieParser());
 app.use(morgan('dev'))
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
+app.use(routes);
 
 //* Relaciones de las tablas
 Product.hasMany(Sales , {as:"product", foreignKey:"productId"});
