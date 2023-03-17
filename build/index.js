@@ -16,7 +16,7 @@ const app = (0, express_1.default)();
 //* Puerto y midlewares
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    "origin": "*",
+    "origin": config_1.ROUTE,
     "methods": "GET,PUT,POST,DELETE",
 }));
 app.use((0, morgan_1.default)('dev'));
@@ -28,6 +28,7 @@ Product_1.default.hasOne(Inventory_1.default, { as: "prod", foreignKey: "product
 Inventory_1.default.belongsTo(Product_1.default, { as: "prod", foreignKey: "productId" });
 //* Escucha del servidor y la BD
 app.listen(config_1.PORT_APP, () => {
+    console.log(`Ruta perimitida ${config_1.ROUTE}`);
     console.log(`🚀 Server listening on port ${config_1.PORT_APP}`);
     console.log(`➡️ http://${config_1.HOST_APP}:${config_1.PORT_APP}`);
     db_1.default
