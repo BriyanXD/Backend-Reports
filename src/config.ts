@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-const PORT_APP = process.env.PORT_APP || "3001";
+const PORT_APP = process.env.PORT_APP || "3002";
 const HOST_APP = process.env.HOST_APP || "192.167.0.4";
 const USER_DB = process.env.USER_DB || "postgres";
 const PASS_DB = process.env.PASS_DB || "123456789";

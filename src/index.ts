@@ -13,7 +13,7 @@ const app = express();
 //* Puerto y midlewares
 app.use(express.json());
 app.use(cors({
-  "origin": "http://192.168.0.4:5173",
+  "origin": "http://localhost:5173",
   "methods": "GET,PUT,POST,DELETE",
 }))
 app.use(morgan('dev'))
