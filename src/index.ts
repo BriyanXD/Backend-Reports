@@ -6,14 +6,14 @@ import Sales from "./models/Sale";
 import Inventory from "./models/Inventory";
 import cors from "cors";
 import morgan from "morgan";
-import { HOST_APP, PORT_APP } from "./config";
+import { HOST_APP, PORT_APP, ROUTE } from "./config";
 const app = express();
 
 
 //* Puerto y midlewares
 app.use(express.json());
 app.use(cors({
-  "origin": "*",
+  "origin": ROUTE,
   "methods": "GET,PUT,POST,DELETE",
 }))
 app.use(morgan('dev'))
@@ -28,6 +28,7 @@ Inventory.belongsTo(Product, {as: "prod", foreignKey:"productId"});
 
 //* Escucha del servidor y la BD
 app.listen(PORT_APP, () => {
+  console.log(`Ruta perimitida ${ROUTE}`);
   console.log(`🚀 Server listening on port ${PORT_APP}`);
   console.log(`➡️ http://${HOST_APP}:${PORT_APP}`);
   sequelize
