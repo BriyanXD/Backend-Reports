@@ -13,11 +13,11 @@ const app = express();
 //* Puerto y midlewares
 app.use(express.json());
 app.use(cors({
-  "origin": ROUTE,
+  "origin": "*",
   "methods": "GET,PUT,POST,DELETE",
 }))
-app.use(morgan('dev'))
 app.use(routes);
+app.use(morgan('dev'))
 
 //* Relaciones de las tablas
 Product.hasMany(Sales , {as:"product", foreignKey:"productId"});
@@ -32,6 +32,6 @@ app.listen(PORT_APP, () => {
   console.log(`🚀 Server listening on port ${PORT_APP}`);
   console.log(`➡️ http://${HOST_APP}:${PORT_APP}`);
   sequelize
-    .sync({ force: false })
-    .then(() => console.log("🆗 Database connected successfully"));
+    .sync({ force: true })
+    .then(() => console.log("🆗 Database connected successfully"))
 });
