@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ROUTE = exports.NAME_DB = exports.PORT_DB = exports.HOST_DB = exports.PASS_DB = exports.USER_DB = exports.PORT_APP = exports.HOST_APP = void 0;
 require("dotenv/config");
-const PORT_APP = process.env.PORT_APP || "3002";
+const PORT_APP = process.env.PORT || "3002";
 exports.PORT_APP = PORT_APP;
 const HOST_APP = process.env.HOST_APP || "192.167.0.4";
 exports.HOST_APP = HOST_APP;
