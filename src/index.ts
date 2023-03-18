@@ -41,6 +41,6 @@ app.listen(PORT_APP, () => {
   console.log(`🚀 Server listening on port ${PORT_APP}`);
   console.log(`route: ${ROUTE}`);
   sequelize
-    .sync({ force: true })
+    .sync({ force: false })
     .then(() => console.log("🆗 Database connected successfully"))
 });

@@ -36,6 +36,6 @@ app.listen(config_1.PORT_APP, () => {
     console.log(`🚀 Server listening on port ${config_1.PORT_APP}`);
     console.log(`route: ${config_1.ROUTE}`);
     db_1.default
-        .sync({ force: true })
+        .sync({ force: false })
         .then(() => console.log("🆗 Database connected successfully"));
 });
