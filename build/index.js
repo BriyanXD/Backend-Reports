@@ -19,7 +19,7 @@ app.use(express_1.default.json({ limit: "50mb" }));
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)('dev'));
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", `${config_1.ROUTE}`); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
@@ -34,7 +34,7 @@ Inventory_1.default.belongsTo(Product_1.default, { as: "prod", foreignKey: "prod
 //* Escucha del servidor y la BD
 app.listen(config_1.PORT_APP, () => {
     console.log(`🚀 Server listening on port ${config_1.PORT_APP}`);
-    console.log(`➡️ http://${config_1.HOST_APP}:${config_1.PORT_APP}`);
+    console.log(`route: ${config_1.ROUTE}`);
     db_1.default
         .sync({ force: true })
         .then(() => console.log("🆗 Database connected successfully"));

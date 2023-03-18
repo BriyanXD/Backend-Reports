@@ -6,7 +6,7 @@ import Sales from "./models/Sale";
 import cookieParser from "cookie-parser";
 import Inventory from "./models/Inventory";
 import morgan from "morgan";
-import { HOST_APP, PORT_APP } from "./config";
+import { PORT_APP, ROUTE } from "./config";
 const app = express();
 
 
@@ -17,7 +17,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(morgan('dev'))
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", `${ROUTE}`); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
@@ -39,7 +39,7 @@ Inventory.belongsTo(Product, {as: "prod", foreignKey:"productId"});
 //* Escucha del servidor y la BD
 app.listen(PORT_APP, () => {
   console.log(`🚀 Server listening on port ${PORT_APP}`);
-  console.log(`➡️ http://${HOST_APP}:${PORT_APP}`);
+  console.log(`route: ${ROUTE}`);
   sequelize
     .sync({ force: true })
     .then(() => console.log("🆗 Database connected successfully"))
