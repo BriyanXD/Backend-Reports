@@ -1,4 +1,4 @@
-import express, { NextFunction } from "express";
+import express from "express";
 import sequelize from "./db";
 import routes from "./routes/index.routes";
 import Product from "./models/Product";
