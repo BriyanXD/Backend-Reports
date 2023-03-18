@@ -33,7 +33,6 @@ Product_1.default.hasOne(Inventory_1.default, { as: "prod", foreignKey: "product
 Inventory_1.default.belongsTo(Product_1.default, { as: "prod", foreignKey: "productId" });
 //* Escucha del servidor y la BD
 app.listen(config_1.PORT_APP, () => {
-    console.log(`Ruta perimitida ${config_1.ROUTE}`);
     console.log(`🚀 Server listening on port ${config_1.PORT_APP}`);
     console.log(`➡️ http://${config_1.HOST_APP}:${config_1.PORT_APP}`);
     db_1.default

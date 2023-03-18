@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import sequelize from "./db";
 import routes from "./routes/index.routes";
 import Product from "./models/Product";
@@ -6,7 +6,7 @@ import Sales from "./models/Sale";
 import cookieParser from "cookie-parser";
 import Inventory from "./models/Inventory";
 import morgan from "morgan";
-import { HOST_APP, PORT_APP, ROUTE } from "./config";
+import { HOST_APP, PORT_APP } from "./config";
 const app = express();
 
 
@@ -21,12 +21,13 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   next();
 });
 app.use(routes);
+
 
 //* Relaciones de las tablas
 Product.hasMany(Sales , {as:"product", foreignKey:"productId"});
@@ -37,7 +38,6 @@ Inventory.belongsTo(Product, {as: "prod", foreignKey:"productId"});
 
 //* Escucha del servidor y la BD
 app.listen(PORT_APP, () => {
-  console.log(`Ruta perimitida ${ROUTE}`);
   console.log(`🚀 Server listening on port ${PORT_APP}`);
   console.log(`➡️ http://${HOST_APP}:${PORT_APP}`);
   sequelize
